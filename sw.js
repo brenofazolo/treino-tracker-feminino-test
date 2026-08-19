@@ -1,4 +1,4 @@
-const CACHE='treino-feminino-test-v5';
+const CACHE='treino-feminino-test-v6';
 const ASSETS=['./index.html','./manifest.json','./config-tools.js','./history-tools.js','./workout-input-tools.js'];
 
 self.addEventListener('install',event=>{
