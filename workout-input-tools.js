@@ -50,7 +50,7 @@
         if(!item)return;
         var repsDefault=plannedReps(item[1]);
 
-        // Histórico fica somente como referência acima dos campos, igual ao masculino.
+        // Histórico fica como referência acima dos campos, igual ao masculino.
         if(prev&&!exEl.querySelector('.previous-session-line')){
           var summary=sessionSummary(prev,i);
           if(summary){
@@ -63,26 +63,35 @@
           }
         }
 
-        // Os campos recebem os dados planejados da ficha, e não dados históricos.
+        // Sugestões ficam esmaecidas como placeholder; não são gravadas ainda.
         exEl.querySelectorAll('.setbox').forEach(function(box,j){
           var inputs=box.querySelectorAll('.inputs input');
           if(inputs.length<2)return;
-
           var repsInput=inputs[0],rpeInput=inputs[1];
-          var current=ex(i).sets[j];
-
-          if(current&&!current.reps&&repsDefault!==''){
-            current.reps=String(repsDefault);
-            repsInput.value=String(repsDefault);
-          }
-          if(current&&!current.rpe){
-            current.rpe=String(plannedRpe(j));
-            rpeInput.value=String(plannedRpe(j));
-          }
+          if(!repsInput.value&&repsDefault!=='')repsInput.placeholder=String(repsDefault);
+          if(!rpeInput.value)rpeInput.placeholder=String(plannedRpe(j));
         });
       });
-      save();
     }catch(e){}
+  }
+
+  // Ao concluir a série, usa a sugestão somente se o usuário não informou outro valor.
+  if(typeof toggle==='function'&&!window.__femaleToggleSuggestionWrapped){
+    var originalToggle=toggle;
+    toggle=function(i,j){
+      try{
+        var current=ex(i).sets[j];
+        if(current&&!current.done&&typeof W!=='undefined'&&W[day]){
+          var item=W[day].items[i];
+          var repsDefault=plannedReps(item&&item[1]);
+          if(!current.reps&&repsDefault!=='')current.reps=String(repsDefault);
+          if(!current.rpe)current.rpe=String(plannedRpe(j));
+          save();
+        }
+      }catch(e){}
+      return originalToggle.apply(this,arguments);
+    };
+    window.__femaleToggleSuggestionWrapped=true;
   }
 
   if(typeof render==='function'&&!window.__femaleWorkoutInputsWrapped){
