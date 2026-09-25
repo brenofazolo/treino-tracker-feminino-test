@@ -1,4 +1,4 @@
-const CACHE='treino-feminino-test-v13';
+const CACHE='treino-feminino-test-v14';
 const ASSETS=['./index.html','./manifest.json','./config-tools.js','./history-tools.js','./workout-input-tools.js','./block-workout-tools.js','./female-enhancements.js','./lances-theme.js','./appearance-tools.js','./lances-tech-logo.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
